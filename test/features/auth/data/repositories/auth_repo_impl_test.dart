@@ -1,7 +1,8 @@
 import 'package:flower_app/core/error_handling/result.dart';
-import 'package:flower_app/features/auth/data/datasources/auth_ds.dart';
-import 'package:flower_app/features/auth/data/datasources/auth_ds_impl.dart';
+import 'package:flower_app/features/auth/data/data_source/auth_data_source.dart';
+import 'package:flower_app/features/auth/data/data_source/auth_data_source_impl.dart';
 import 'package:flower_app/features/auth/data/repositories/auth_repo_impl.dart';
+import 'package:flower_app/features/auth/domain/entities/user_entity.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flower_app/features/auth/data/models/requests/reset_password_request.dart';
 import 'package:flower_app/features/auth/data/models/requests/send_reset_password_code_request.dart';
@@ -11,11 +12,9 @@ import 'package:flower_app/features/auth/data/models/response/send_reset_passwor
 import 'package:flower_app/features/auth/data/models/response/verify_reset_code_response.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:flower_app/core/api/models/requests/user_request.dart';
-import 'package:flower_app/core/api/models/response/user_dto.dart';
-import 'package:flower_app/features/auth/data/models_dto/login/login_request.dart';
-import 'package:flower_app/features/auth/data/models_dto/login/login_response_dto.dart';
-import 'package:flower_app/features/auth/domain/models/user_entity.dart';
+import 'package:flower_app/features/auth/data/models/user_dto.dart';
+import 'package:flower_app/features/auth/data/models/requests/login_request.dart';
+import 'package:flower_app/features/auth/data/models/response/login_response.dart';
 
 import 'auth_repo_impl_test.mocks.dart';
 
@@ -24,13 +23,10 @@ void main() {
   late MockAuthDataSourceImpl mockAuthDataSource;
   late AuthRepoImpl authRepo;
   late LoginRequest loginRequest;
-  late LoginResponseDto loginResponse;
-  late Result<LoginResponseDto> response;
-  late AuthRepoImpl mockRepo;
-  late UserSignupRequest userRequest;
+  late LoginResponse loginResponse;
+  late Result<LoginResponse> response;
   late UserDto userDto;
   late UserEntity userEntity;
-  late String message;
 
   late AuthDataSource authDataSource;
   // filling data
@@ -63,29 +59,22 @@ void main() {
     // Ensure tests stub/verify the same mock instance
     authDataSource = mockAuthDataSource;
 
-    loginRequest =  const LoginRequest(email: "test@test.com", password: "123456");
-    loginResponse = LoginResponseDto(
+    loginRequest = const LoginRequest(
+      email: "test@test.com",
+      password: "123456",
+    );
+    loginResponse = LoginResponse(
       userDto: UserDto(id: "1"),
       token: "abc123",
       message: "success",
     );
     response = Success(loginResponse);
 
-    provideDummy<Result<LoginResponseDto>>(response);
+    provideDummy<Result<LoginResponse>>(response);
 
     when(
       mockAuthDataSource.login(loginRequest: loginRequest),
     ).thenAnswer((_) async => response);
-    message = "error message";
-    userRequest = UserSignupRequest(
-      gender: "male",
-      firstName: "abdo",
-      lastName: "abdoa",
-      email: "abdo@d.com",
-      password: "dd",
-      rePassword: "dd",
-      phone: "12345",
-    );
     userDto = UserDto(
       id: "d",
       firstName: "abdo",
@@ -142,7 +131,10 @@ void main() {
         ),
       ).called(1);
       verifyNoMoreInteractions(authDataSource);
-      expect((result as Success<SendResetPasswordCodeResponse>).data.message, responseMessage);
+      expect(
+        (result as Success<SendResetPasswordCodeResponse>).data.message,
+        responseMessage,
+      );
     });
 
     test("When i call sendResetPasswordCode it calls "
@@ -171,7 +163,10 @@ void main() {
         ),
       ).called(1);
       verifyNoMoreInteractions(authDataSource);
-      expect((result as Failure<SendResetPasswordCodeResponse>).errorMessage, errorMessageResponse);
+      expect(
+        (result as Failure<SendResetPasswordCodeResponse>).errorMessage,
+        errorMessageResponse,
+      );
     });
   });
 
@@ -200,7 +195,10 @@ void main() {
         ),
       ).called(1);
       verifyNoMoreInteractions(authDataSource);
-      expect((result as Success<VerifyResetCodeResponse>).data.message, responseMessage);
+      expect(
+        (result as Success<VerifyResetCodeResponse>).data.message,
+        responseMessage,
+      );
     });
 
     test("When i call verifyResetPasswordCode it calls "
@@ -227,7 +225,10 @@ void main() {
         ),
       ).called(1);
       verifyNoMoreInteractions(authDataSource);
-      expect((result as Failure<VerifyResetCodeResponse>).errorMessage, errorMessageResponse);
+      expect(
+        (result as Failure<VerifyResetCodeResponse>).errorMessage,
+        errorMessageResponse,
+      );
     });
   });
 
@@ -262,7 +263,10 @@ void main() {
         ),
       ).called(1);
       verifyNoMoreInteractions(authDataSource);
-      expect((result as Success<ResetPasswordResponse>).data.message, responseMessage);
+      expect(
+        (result as Success<ResetPasswordResponse>).data.message,
+        responseMessage,
+      );
     });
 
     test("When i call resetPassword it calls "
@@ -295,7 +299,10 @@ void main() {
         ),
       ).called(1);
       verifyNoMoreInteractions(authDataSource);
-      expect((result as Failure<ResetPasswordResponse>).errorMessage, errorMessageResponse);
+      expect(
+        (result as Failure<ResetPasswordResponse>).errorMessage,
+        errorMessageResponse,
+      );
     });
   });
 }

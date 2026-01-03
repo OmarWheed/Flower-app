@@ -5,27 +5,28 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i3;
 
-import 'package:flower_app/core/api/models/requests/user_request.dart' as _i11;
-import 'package:flower_app/core/api/models/response/user_dto.dart' as _i10;
 import 'package:flower_app/core/error_handling/result.dart' as _i4;
-import 'package:flower_app/features/auth/data/datasources/auth_ds_impl.dart'
+import 'package:flower_app/features/auth/data/data_source/auth_data_source_impl.dart'
     as _i2;
+import 'package:flower_app/features/auth/data/models/requests/login_request.dart'
+    as _i6;
 import 'package:flower_app/features/auth/data/models/requests/reset_password_request.dart'
     as _i9;
 import 'package:flower_app/features/auth/data/models/requests/send_reset_password_code_request.dart'
     as _i13;
+import 'package:flower_app/features/auth/data/models/requests/signup_request.dart'
+    as _i11;
 import 'package:flower_app/features/auth/data/models/requests/verify_reset_code_request.dart'
     as _i15;
+import 'package:flower_app/features/auth/data/models/response/login_response.dart'
+    as _i5;
 import 'package:flower_app/features/auth/data/models/response/reset_password_response.dart'
     as _i8;
 import 'package:flower_app/features/auth/data/models/response/send_reset_password_code_response.dart'
     as _i12;
 import 'package:flower_app/features/auth/data/models/response/verify_reset_code_response.dart'
     as _i14;
-import 'package:flower_app/features/auth/data/models_dto/login/login_request.dart'
-    as _i6;
-import 'package:flower_app/features/auth/data/models_dto/login/login_response_dto.dart'
-    as _i5;
+import 'package:flower_app/features/auth/data/models/user_dto.dart' as _i10;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i7;
 
@@ -53,19 +54,19 @@ class MockAuthDataSourceImpl extends _i1.Mock
   }
 
   @override
-  _i3.Future<_i4.Result<_i5.LoginResponseDto>> login({
+  _i3.Future<_i4.Result<_i5.LoginResponse>> login({
     required _i6.LoginRequest? loginRequest,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#login, [], {#loginRequest: loginRequest}),
-            returnValue: _i3.Future<_i4.Result<_i5.LoginResponseDto>>.value(
-              _i7.dummyValue<_i4.Result<_i5.LoginResponseDto>>(
+            returnValue: _i3.Future<_i4.Result<_i5.LoginResponse>>.value(
+              _i7.dummyValue<_i4.Result<_i5.LoginResponse>>(
                 this,
                 Invocation.method(#login, [], {#loginRequest: loginRequest}),
               ),
             ),
           )
-          as _i3.Future<_i4.Result<_i5.LoginResponseDto>>);
+          as _i3.Future<_i4.Result<_i5.LoginResponse>>);
 
   @override
   _i3.Future<_i4.Result<_i8.ResetPasswordResponse>> resetPassword({
@@ -88,15 +89,15 @@ class MockAuthDataSourceImpl extends _i1.Mock
           as _i3.Future<_i4.Result<_i8.ResetPasswordResponse>>);
 
   @override
-  _i3.Future<_i4.Result<_i10.UserDto>> signUp(
-    _i11.UserSignupRequest? request,
-  ) =>
+  _i3.Future<_i4.Result<_i10.UserDto>> signup({
+    required _i11.SignupRequest? signupRequest,
+  }) =>
       (super.noSuchMethod(
-            Invocation.method(#signUp, [request]),
+            Invocation.method(#signup, [], {#signupRequest: signupRequest}),
             returnValue: _i3.Future<_i4.Result<_i10.UserDto>>.value(
               _i7.dummyValue<_i4.Result<_i10.UserDto>>(
                 this,
-                Invocation.method(#signUp, [request]),
+                Invocation.method(#signup, [], {#signupRequest: signupRequest}),
               ),
             ),
           )

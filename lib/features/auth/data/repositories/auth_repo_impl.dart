@@ -5,14 +5,15 @@ import 'package:flower_app/features/auth/data/models/response/reset_password_res
 import 'package:flower_app/features/auth/data/models/response/send_reset_password_code_response.dart';
 import 'package:flower_app/features/auth/data/models/response/verify_reset_code_response.dart';
 import 'package:flower_app/core/error_handling/result.dart';
-import 'package:flower_app/features/auth/data/datasources/auth_ds.dart';
-import 'package:flower_app/core/api/models/requests/user_request.dart';
-import 'package:flower_app/core/api/models/response/user_dto.dart';
-import 'package:flower_app/features/auth/domain/models/user_entity.dart';
-import 'package:flower_app/features/auth/data/models_dto/login/login_request.dart';
-import 'package:flower_app/features/auth/data/models_dto/login/login_response_dto.dart';
+import 'package:flower_app/features/auth/data/models/requests/signup_request.dart';
+import 'package:flower_app/features/auth/data/models/user_dto.dart';
+import 'package:flower_app/features/auth/domain/entities/user_entity.dart';
+import 'package:flower_app/features/auth/data/models/requests/login_request.dart';
+import 'package:flower_app/features/auth/data/models/response/login_response.dart';
 import 'package:flower_app/features/auth/domain/repositories/auth_repo.dart';
 import 'package:injectable/injectable.dart';
+
+import '../data_source/auth_data_source.dart';
 
 @LazySingleton(as: AuthRepo)
 class AuthRepoImpl implements AuthRepo {
@@ -57,25 +58,43 @@ class AuthRepoImpl implements AuthRepo {
   }
 
   @override
-  Future<Result<LoginResponseDto>> login({
-    required LoginRequest loginRequest,
-  }) async {
+  Future<Result<LoginResponse>> login({required String email, password}) async {
+    var loginRequest = LoginRequest(email: email, password: password);
     var response = await _authDataSource.login(loginRequest: loginRequest);
     switch (response) {
-      case Success<LoginResponseDto>():
+      case Success<LoginResponse>():
         {
-          return Success<LoginResponseDto>(response.data);
+          return Success<LoginResponse>(response.data);
         }
-      case Failure<LoginResponseDto>():
+      case Failure<LoginResponse>():
         {
-          return Failure<LoginResponseDto>(response.errorMessage);
+          return Failure<LoginResponse>(response.errorMessage);
         }
     }
   }
 
   @override
-  Future<Result<UserEntity>> signUp(UserSignupRequest request) async {
-    Result<UserDto> userDtoResponse = await _authDataSource.signUp(request);
+  Future<Result<UserEntity>> signup({
+    required String firstName,
+    lastName,
+    phone,
+    gender,
+    email,
+    password,
+    rePassword,
+  }) async {
+    var signupRequest = SignupRequest(
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      password: password,
+      rePassword: rePassword,
+      phone: phone,
+      gender: gender,
+    );
+    Result<UserDto> userDtoResponse = await _authDataSource.signup(
+      signupRequest: signupRequest,
+    );
     switch (userDtoResponse) {
       case Success<UserDto>():
         {

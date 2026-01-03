@@ -1,4 +1,3 @@
-import 'package:flower_app/core/constants/text_strings.dart';
 import 'package:flower_app/core/styles/app_textstyles.dart';
 import 'package:flower_app/core/theme/app_theme.dart';
 import 'package:flower_app/core/theme/theme_extension.dart';
@@ -27,7 +26,7 @@ class LightTheme extends AppTheme {
       thumbColor: WidgetStateProperty.all(color.secondary),
       trackColor: WidgetStateProperty.all(color.primary),
     ),
-    fontFamily: IAppText.fontFamily,
+    fontFamily: 'Inter',
     useMaterial3: true,
     filledButtonTheme: filledButtonThemeData,
     inputDecorationTheme: inputDecorationTheme,
@@ -129,14 +128,12 @@ class LightTheme extends AppTheme {
 
   @override
   AppBarTheme get appBarTheme => AppBarTheme(
-
     foregroundColor: Colors.transparent,
     backgroundColor: Colors.transparent,
     elevation: 0,
-    iconTheme: const IconThemeData(size: 20,color: Colors.black,),
+    iconTheme: const IconThemeData(size: 20, color: Colors.black),
     titleTextStyle: appThemeExtension.medium20,
     centerTitle: false,
-
   );
 }
 
@@ -161,6 +158,7 @@ class _LightColors extends AppColors {
     90: Color(0xFF460a23),
     100: Color(0xFF2a0615),
   });
+
   @override
   MaterialColor get secondary => const MaterialColor(0xFFf9f9f9, <int, Color>{
     0: Color(0xFFf9f9f9),

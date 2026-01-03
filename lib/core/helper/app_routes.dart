@@ -1,11 +1,11 @@
 import 'package:flower_app/core/app/presentation/view/app_section.dart';
 import 'package:flower_app/core/app/presentation/view_model/app_section_view_model.dart';
-import 'package:flower_app/features/auth/presentation/cubit/forget_password/forget_password_cubit.dart';
-import 'package:flower_app/features/auth/presentation/cubit/login_view_model/login_view_model.dart';
-import 'package:flower_app/features/auth/presentation/pages/forget_password/forget_password_view.dart';
-import 'package:flower_app/features/auth/presentation/pages/login_screen.dart';
-import 'package:flower_app/features/auth/presentation/pages/signup_screen.dart';
-import 'package:flower_app/features/auth/presentation/pages/terms_and_conditions.dart';
+import 'package:flower_app/features/auth/presentation/views/forget_password/view_model/forget_password_view_model.dart';
+import 'package:flower_app/features/auth/presentation/views/login/view_model/login_view_model.dart';
+import 'package:flower_app/features/auth/presentation/views/forget_password/forget_password_screen.dart';
+import 'package:flower_app/features/auth/presentation/views/login/login_screen.dart';
+import 'package:flower_app/features/auth/presentation/views/signup/signup_screen.dart';
+import 'package:flower_app/features/auth/presentation/views/terms_and_conditions/terms_and_conditions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../di/di.dart';
@@ -21,7 +21,7 @@ class AppRoutes {
 Route? onGenerateRoute(RouteSettings settings) {
   switch (settings.name) {
     case AppRoutes.signup:
-      return MaterialPageRoute(builder: (_) => const SignUpScreen());
+      return MaterialPageRoute(builder: (_) => const SignupScreen());
     case AppRoutes.appSection:
       return MaterialPageRoute(
         builder: (_) => BlocProvider<AppSectionViewModel>(
@@ -42,8 +42,8 @@ Route? onGenerateRoute(RouteSettings settings) {
     case AppRoutes.forgetPassword:
       return MaterialPageRoute(
         builder: (_) => BlocProvider(
-          create: (context) => getIt.get<ForgetPasswordCubit>(),
-          child: const ForgetPasswordView(),
+          create: (context) => getIt.get<ForgetPasswordViewModel>(),
+          child: const ForgetPasswordScreen(),
         ),
       );
     default:
