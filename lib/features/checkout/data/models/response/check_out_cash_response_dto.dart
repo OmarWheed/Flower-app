@@ -1,7 +1,7 @@
 import 'package:flower_app/features/checkout/data/models/response/order_dto.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-part 'check-out-cash-response-dto.g.dart';
+part 'check_out_cash_response_dto.g.dart';
 
 @JsonSerializable()
 class CheckOutCashResponseDto {
