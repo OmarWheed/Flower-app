@@ -3,7 +3,7 @@ import 'package:flower_app/core/error_handling/result.dart';
 import 'package:flower_app/features/checkout/data/data_sources/check_out_data_source_impl.dart';
 import 'package:flower_app/features/checkout/data/models/request/check_out_order_request.dart';
 import 'package:flower_app/features/checkout/data/models/response/address_dto.dart';
-import 'package:flower_app/features/checkout/data/models/response/check-out-cash-response-dto.dart';
+import 'package:flower_app/features/checkout/data/models/response/check_out_cash_response_dto.dart';
 import 'package:flower_app/features/checkout/data/models/response/check_out_order_response.dart';
 import 'package:flower_app/features/checkout/data/models/response/order_dto.dart';
 import 'package:flower_app/features/checkout/data/models/response/session_dto.dart';
