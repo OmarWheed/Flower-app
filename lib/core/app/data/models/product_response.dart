@@ -5,7 +5,7 @@ import 'meta_data.dart';
 
 part 'product_response.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class ProductResponse {
   @JsonKey(name: "message")
   final String? message;
@@ -16,11 +16,8 @@ class ProductResponse {
 
   ProductResponse({this.message, this.metadata, this.productsDto});
 
-  factory ProductResponse.fromJson(Map<String, dynamic> json) {
-    return _$ProductResponseFromJson(json);
-  }
+  factory ProductResponse.fromJson(Map<String, dynamic> json) =>
+      _$ProductResponseFromJson(json);
 
-  Map<String, dynamic> toJson() {
-    return _$ProductResponseToJson(this);
-  }
+  Map<String, dynamic> toJson() => _$ProductResponseToJson(this);
 }

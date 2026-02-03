@@ -6,7 +6,7 @@ import 'package:flower_app/core/app/data/models/product_type_dto.dart';
 
 part 'home_response_dto.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class HomeResponseDto extends Equatable {
   @JsonKey(name: 'message')
   final String? message;
@@ -18,6 +18,7 @@ class HomeResponseDto extends Equatable {
   final List<ProductsDto>? bestSeller;
   @JsonKey(name: 'occasions')
   final List<ProductTypeDto>? occasions;
+
   const HomeResponseDto({
     this.message,
     this.products,

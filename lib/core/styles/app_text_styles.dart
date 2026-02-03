@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-class AppTextStyles {
-  AppTextStyles._();
-
+abstract class AppTextStyles {
   // Headlines
   static const TextStyle semiBold24 = TextStyle(
     fontSize: 24,

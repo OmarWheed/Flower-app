@@ -15,11 +15,7 @@ class Metadata {
 
   Metadata({this.currentPage, this.totalPages, this.limit, this.totalItems});
 
-  factory Metadata.fromJson(Map<String, dynamic> json) {
-    return _$MetadataFromJson(json);
-  }
+  factory Metadata.fromJson(Map<String, dynamic> json) => _$MetadataFromJson(json);
 
-  Map<String, dynamic> toJson() {
-    return _$MetadataToJson(this);
-  }
+  Map<String, dynamic> toJson() => _$MetadataToJson(this);
 }

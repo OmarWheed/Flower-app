@@ -65,11 +65,8 @@ class BestSellerDto {
     this.id,
   });
 
-  factory BestSellerDto.fromJson(Map<String, dynamic> json) {
-    return _$BestSellerDtoFromJson(json);
-  }
+  factory BestSellerDto.fromJson(Map<String, dynamic> json) =>
+      _$BestSellerDtoFromJson(json);
 
-  Map<String, dynamic> toJson() {
-    return _$BestSellerDtoToJson(this);
-  }
+  Map<String, dynamic> toJson() => _$BestSellerDtoToJson(this);
 }

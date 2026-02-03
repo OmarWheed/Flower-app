@@ -1,8 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-class AppDimensions {
-  const AppDimensions._();
-
+abstract class AppDimensions {
   static const double small = 8.0;
   static const double medium = 16.0;
   static const double large = 32.0;
@@ -13,16 +11,13 @@ class AppDimensions {
   static const double mediumBorderRadius = 16.0;
   static const double largeBorderRadius = 24.0;
 
-  // TODO: rename screenPadding
   static const EdgeInsets pagePadding = EdgeInsets.symmetric(
     horizontal: AppPadding.medium,
     vertical: AppPadding.medium,
   );
 }
 
-class AppPadding {
-  const AppPadding._();
-
+abstract class AppPadding {
   static const double small = 8.0;
   static const double medium = 16.0;
   static const double large = 32.0;
