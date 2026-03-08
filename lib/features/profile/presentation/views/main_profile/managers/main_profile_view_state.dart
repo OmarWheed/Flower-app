@@ -1,5 +1,11 @@
 final class MainProfileViewState {
-  factory MainProfileViewState() => const MainProfileViewState.init();
+  bool? allowNotification;
 
-  const MainProfileViewState.init();
+  MainProfileViewState({this.allowNotification});
+
+  MainProfileViewState copyWith({bool? allowNotification}) {
+    return MainProfileViewState(
+      allowNotification: allowNotification ?? this.allowNotification,
+    );
+  }
 }

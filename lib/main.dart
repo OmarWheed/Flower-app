@@ -4,9 +4,11 @@ import 'package:flower_app/core/bloc_box/my_bloc_observer.dart';
 import 'package:flower_app/core/di/di.dart';
 import 'package:flower_app/core/helper/app_local_storage.dart';
 import 'package:flower_app/core/helper/local_keys.dart';
+import 'package:flower_app/core/services/firebase/push_notification_service.dart';
 import 'package:flower_app/flower_app.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import 'firebase_options.dart';
 
@@ -14,11 +16,16 @@ bool isLoggedInUser = false;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await PushNotificationService.initFCM();
+  await Permission.notification.request().then((allow) {
+    AppLocalStorage.setData(LocalKeys.notification, allow.isGranted);
+  });
   await EasyLocalization.ensureInitialized();
-  Bloc.observer = MyBlocObserver();
+  await configureDependencies();
+
   isLoggedInUser = await getInitialAppRoute();
 
-  await configureDependencies();
+  Bloc.observer = MyBlocObserver();
   runApp(
     EasyLocalization(
       saveLocale: true,

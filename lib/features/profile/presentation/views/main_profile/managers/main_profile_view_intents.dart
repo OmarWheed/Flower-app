@@ -6,7 +6,13 @@ class OnMyOrdersClickIntent extends ProfileViewIntents {}
 
 class OnSavedAddressesClickIntent extends ProfileViewIntents {}
 
-class OnNotificationClickIntent extends ProfileViewIntents {}
+class OnNotificationClickIntent extends ProfileViewIntents {
+  final bool? allowNotification;
+
+  OnNotificationClickIntent({this.allowNotification});
+}
+
+class RefreshState extends ProfileViewIntents {}
 
 class OnLanguageClickIntent extends ProfileViewIntents {}
 

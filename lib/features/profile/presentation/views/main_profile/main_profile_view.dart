@@ -11,6 +11,7 @@ import 'package:flower_app/features/auth/presentation/pages/logout/logout_dialog
 import 'package:flower_app/features/localization/model/app_language.dart';
 import 'package:flower_app/features/localization/view/language_bottom_sheet.dart';
 import 'package:flower_app/features/profile/presentation/views/main_profile/managers/main_profile_view_intents.dart';
+import 'package:flower_app/features/profile/presentation/views/main_profile/managers/main_profile_view_state.dart';
 import 'package:flower_app/features/profile/presentation/views/main_profile/managers/main_profile_view_ui_events.dart';
 import 'package:flower_app/features/profile/presentation/views/main_profile/view_model/main_profile_view_model.dart';
 import 'package:flower_app/features/profile/presentation/widgets/main_profile_item.dart';
@@ -25,13 +26,22 @@ class MainProfileView extends StatefulWidget {
   State<MainProfileView> createState() => _MainProfileViewState();
 }
 
-class _MainProfileViewState extends State<MainProfileView> {
+class _MainProfileViewState extends State<MainProfileView>
+    with WidgetsBindingObserver {
   String _appVersion = '0.0.0';
   late StreamSubscription _uiEventsSubscription;
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      context.read<MainProfileViewModel>().doIntent(RefreshState());
+    }
+  }
+
+  @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _loadVersion();
     _uiEventsSubscription = context
         .read<MainProfileViewModel>()
@@ -68,6 +78,7 @@ class _MainProfileViewState extends State<MainProfileView> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _uiEventsSubscription.cancel();
     super.dispose();
   }
@@ -121,10 +132,25 @@ class _MainProfileViewState extends State<MainProfileView> {
               onTap: () => vm.doIntent(OnSavedAddressesClickIntent()),
             ),
             const Divider(),
-            MainProfileItem(
-              title: 'notification'.tr(),
-              prefix: const Switch(value: true, onChanged: null),
-              onTap: () => vm.doIntent(OnNotificationClickIntent()),
+            BlocBuilder<MainProfileViewModel, MainProfileViewState>(
+              buildWhen: (previous, current) =>
+                  previous.allowNotification != current.allowNotification,
+              builder: (context, state) {
+                bool activeSwitch = state.allowNotification ?? false;
+                return MainProfileItem(
+                  title: 'notification'.tr(),
+                  prefix: Switch(
+                    inactiveTrackColor: context.appTheme.grey,
+                    value: activeSwitch,
+                    onChanged: (newValue) {
+                      vm.doIntent(
+                        OnNotificationClickIntent(allowNotification: newValue),
+                      );
+                    },
+                  ),
+                  onTap: null, // Remove onTap - let Switch handle interaction
+                );
+              },
             ),
             const Divider(),
             MainProfileItem(

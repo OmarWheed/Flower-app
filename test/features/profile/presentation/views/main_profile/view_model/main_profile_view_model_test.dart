@@ -1,12 +1,27 @@
-import 'package:flower_app/features/profile/presentation/views/main_profile/view_model/main_profile_view_model.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flower_app/features/profile/presentation/views/main_profile/managers/main_profile_view_intents.dart';
 import 'package:flower_app/features/profile/presentation/views/main_profile/managers/main_profile_view_ui_events.dart';
+import 'package:flower_app/features/profile/presentation/views/main_profile/view_model/main_profile_view_model.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   late MainProfileViewModel viewModel;
 
   setUp(() {
+    SharedPreferences.setMockInitialValues({});
+
+    const channel = MethodChannel('flutter.baseflow.com/permissions/methods');
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(channel, (MethodCall methodCall) async {
+          if (methodCall.method == 'checkPermissionStatus') {
+            return 1; // 1
+          }
+          return null;
+        });
+
     viewModel = MainProfileViewModel();
   });
 
@@ -40,15 +55,6 @@ void main() {
       );
 
       viewModel.doIntent(OnSavedAddressesClickIntent());
-    });
-
-    test('emits NavToNotificationEvent on OnNotificationClickIntent', () {
-      expectLater(
-        viewModel.uiEvents,
-        emitsInOrder([isA<NavToNotificationEvent>()]),
-      );
-
-      viewModel.doIntent(OnNotificationClickIntent());
     });
 
     test('emits OpenLanguageBottomSheetEvent on OnLanguageClickIntent', () {
