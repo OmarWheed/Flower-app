@@ -4,4 +4,6 @@ class LocalKeys {
   static const String user = "user";
   static const String rememberMe = "remember-me";
   static const String notification = "notification";
+  static const String deviceToken = "deviceToken";
+  static const String userId = "userId";
 }

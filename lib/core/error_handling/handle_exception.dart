@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 
@@ -22,6 +23,8 @@ class NetworkException {
         case DioExceptionType.unknown:
           return 'errors.unknown'.tr();
       }
+    } else if (exception is FirebaseException) {
+      return _handleMessageErrorFromFirebase(exception);
     } else {
       return exception.toString();
     }
@@ -61,5 +64,32 @@ class NetworkException {
       }
     }
     return 'errors.defaultError'.tr();
+  }
+
+  static String _handleMessageErrorFromFirebase(FirebaseException exception) {
+    switch (exception.code) {
+      case 'permission-denied':
+        return 'errors.permissionDenied'.tr();
+      case 'unavailable':
+        return 'errors.serviceUnavailable'.tr();
+      case 'deadline-exceeded':
+        return 'errors.timeout'.tr();
+      case 'not-found':
+        return 'errors.notFound'.tr();
+      case 'already-exists':
+        return 'errors.alreadyExists'.tr();
+      case 'unauthenticated':
+        return 'errors.unauthenticated'.tr();
+      case 'cancelled':
+        return 'errors.cancelled'.tr();
+      case 'resource-exhausted':
+        return 'errors.resourceExhausted'.tr();
+      case 'aborted':
+        return 'errors.aborted'.tr();
+      case 'internal':
+        return 'errors.internal'.tr();
+      default:
+        return exception.message ?? 'errors.unknown'.tr();
+    }
   }
 }

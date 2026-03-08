@@ -3,8 +3,8 @@ import 'package:flower_app/core/app/domain/entities/products_entity.dart';
 import 'package:flower_app/core/app/presentation/view/app_section.dart';
 import 'package:flower_app/core/app/presentation/view_model/app_section_contracts.dart';
 import 'package:flower_app/core/app/presentation/view_model/app_section_view_model.dart';
-import 'package:flower_app/features/address/presentation/view/google_map_view.dart';
 import 'package:flower_app/features/address/presentation/view/add_new_address_view.dart';
+import 'package:flower_app/features/address/presentation/view/google_map_view.dart';
 import 'package:flower_app/features/address/presentation/view/save_address_view.dart';
 import 'package:flower_app/features/address/presentation/view_model/address_view_model.dart';
 import 'package:flower_app/features/auth/presentation/cubit/change_password/change_password_view_model.dart';
@@ -14,9 +14,9 @@ import 'package:flower_app/features/auth/presentation/pages/change_password/chan
 import 'package:flower_app/features/auth/presentation/pages/forget_password/forget_password_view.dart';
 import 'package:flower_app/features/auth/presentation/pages/login_screen.dart';
 import 'package:flower_app/features/auth/presentation/pages/signup_screen.dart';
+import 'package:flower_app/features/categories/presentation/view/manager/categories_view_model.dart';
 import 'package:flower_app/features/checkout/presentation/view/check_out_view.dart';
 import 'package:flower_app/features/checkout/presentation/view/payment_view.dart';
-import 'package:flower_app/features/categories/presentation/view/manager/categories_view_model.dart';
 import 'package:flower_app/features/home/presentation/view/best_seller_view.dart';
 import 'package:flower_app/features/home/presentation/view/occasions/occasion_screen.dart';
 import 'package:flower_app/features/home/presentation/view/search_view.dart';
@@ -28,12 +28,18 @@ import 'package:flower_app/features/profile/presentation/views/edit_profile/edit
 import 'package:flower_app/features/profile/presentation/views/edit_profile/view_model/edit_profile_view_model.dart';
 import 'package:flower_app/features/profile/presentation/views/main_profile/about_us_view.dart';
 import 'package:flower_app/features/profile/presentation/views/main_profile/view_model/main_profile_view_model.dart';
+import 'package:flower_app/features/profile/presentation/views/notifications/managers/notifications_view_contract.dart';
+import 'package:flower_app/features/profile/presentation/views/notifications/notifications_view.dart';
+import 'package:flower_app/features/profile/presentation/views/notifications/view_model/notifications_view_model.dart';
+import 'package:flower_app/features/saved_orders/presentation/view/saved_order_screen.dart';
+import 'package:flower_app/features/saved_orders/presentation/view_model/saved_order_cubit.dart';
 import 'package:flower_app/features/terms/presentation/manager/terms_intent.dart';
 import 'package:flower_app/features/terms/presentation/terms_view.dart';
 import 'package:flower_app/features/terms/presentation/view_model/terms_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../features/saved_orders/presentation/view_model/saved_order_events.dart';
 import '../di/di.dart';
 
 class AppRoutes {
@@ -58,10 +64,12 @@ class AppRoutes {
   static const String saveAddress = '/saveAddress';
   static const String checkout = '/checkout';
   static const String payment = '/payment';
+  static const String savedOrders = '/savedOrders';
 }
 
 Route? onGenerateRoute(RouteSettings settings) {
   var addressViewModel = getIt.get<AddressViewModel>();
+
   switch (settings.name) {
     case AppRoutes.mostSelling:
       return MaterialPageRoute(
@@ -151,6 +159,7 @@ Route? onGenerateRoute(RouteSettings settings) {
           child: const ForgetPasswordView(),
         ),
       );
+
     case AppRoutes.editProfile:
       final EditProfileViewModel editProfileViewModel =
           getIt<EditProfileViewModel>();
@@ -160,6 +169,7 @@ Route? onGenerateRoute(RouteSettings settings) {
           child: const EditProfileView(),
         ),
       );
+
     case AppRoutes.changePassword:
       return MaterialPageRoute(
         builder: (_) => BlocProvider(
@@ -176,6 +186,7 @@ Route? onGenerateRoute(RouteSettings settings) {
           child: const SaveAddressView(),
         ),
       );
+
     case AppRoutes.addNewAddress:
       return MaterialPageRoute(
         settings: settings,
@@ -184,6 +195,7 @@ Route? onGenerateRoute(RouteSettings settings) {
           child: const AddNewAddressView(),
         ),
       );
+
     case AppRoutes.googleMapService:
       return MaterialPageRoute(
         builder: (_) => BlocProvider.value(
@@ -197,6 +209,7 @@ Route? onGenerateRoute(RouteSettings settings) {
         builder: (_) => const CheckoutView(),
         settings: settings,
       );
+
     case AppRoutes.payment:
       return MaterialPageRoute(
         settings: settings,
@@ -205,6 +218,7 @@ Route? onGenerateRoute(RouteSettings settings) {
           child: const PaymentView(),
         ),
       );
+
     case AppRoutes.aboutUs:
       return MaterialPageRoute(
         builder: (_) => BlocProvider(
@@ -220,6 +234,24 @@ Route? onGenerateRoute(RouteSettings settings) {
           child: const SearchView(),
         ),
       );
+    case AppRoutes.savedOrders:
+      return MaterialPageRoute(
+        builder: (_) => BlocProvider(
+          create: (context) =>
+              getIt.get<SavedOrderCubit>()..doIntent(GetSavedOrdersEvents()),
+          child: const SavedOrdersScreen(),
+        ),
+      );
+
+    case AppRoutes.notifications:
+      var viewModel = getIt.get<NotificationsViewModel>();
+      return MaterialPageRoute(
+        builder: (_) => BlocProvider(
+          create: (context) => viewModel..doIntent(FetchNotificationsIntent()),
+          child: const NotificationsView(),
+        ),
+      );
+
     default:
       return null;
   }

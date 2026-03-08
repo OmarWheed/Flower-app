@@ -1,6 +1,8 @@
 class IAppText {
   static const String appName = "Flower App";
   static const String fontFamily = "Inter";
+  static const String collectionPath = "users";
+
   //==============> Login <==============
 
   static const String login = "Login";

@@ -1,6 +1,8 @@
 import 'package:flower_app/core/api/models/requests/user_request.dart';
 import 'package:flower_app/core/api/models/response/user_dto.dart';
 import 'package:flower_app/core/error_handling/result.dart';
+import 'package:flower_app/core/helper/app_local_storage.dart';
+import 'package:flower_app/core/helper/local_keys.dart';
 import 'package:flower_app/features/auth/data/datasources/auth_ds.dart';
 import 'package:flower_app/features/auth/data/models/requests/change_password_request.dart';
 import 'package:flower_app/features/auth/data/models/requests/reset_password_request.dart';
@@ -68,6 +70,8 @@ class AuthRepoImpl implements AuthRepo {
     switch (response) {
       case Success<LoginResponseDto>():
         {
+          var userId = response.data.userDto?.id;
+          await AppLocalStorage.setData(LocalKeys.userId, userId);
           return Success<LoginResponseDto>(response.data);
         }
       case Failure<LoginResponseDto>():

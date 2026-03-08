@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flower_app/core/app/domain/use_case/get_user_data_use_case.dart';
+import 'package:flower_app/core/app/domain/use_case/upload_user_info_use_case.dart';
 import 'package:flower_app/core/error_handling/result.dart';
 import 'package:flower_app/features/auth/domain/models/user_entity.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,6 +12,7 @@ import 'app_section_contracts.dart';
 @injectable
 class AppSectionViewModel extends Cubit<AppSectionState> {
   final GetUserDataUseCase _getUserDataUseCase;
+  final UploadUserInfoUseCase _uploadUserInfoUseCase;
 
   UserEntity _user = UserEntity();
 
@@ -20,7 +22,7 @@ class AppSectionViewModel extends Cubit<AppSectionState> {
 
   Stream<AppSectionUIEvents> get uiStream => _uiStreamController.stream;
 
-  AppSectionViewModel(this._getUserDataUseCase)
+  AppSectionViewModel(this._getUserDataUseCase, this._uploadUserInfoUseCase)
     : super(const AppSectionState());
 
   void doIntent(AppSectionIntent intent) {
@@ -38,11 +40,36 @@ class AppSectionViewModel extends Cubit<AppSectionState> {
 
       case ViewProfileIntent():
         _switchToProfile();
+      case UpLoadUserInfoIntent():
+        _upLoadUserData(
+          collectionPath: intent.collectionPath,
+          userId: intent.userId,
+          data: intent.data,
+        );
     }
   }
 
   void _init() {
     _getUserData();
+  }
+
+  void _upLoadUserData({
+    required String collectionPath,
+    required String userId,
+    required Map<String, dynamic> data,
+  }) async {
+    final result = await _uploadUserInfoUseCase.call(
+      collectionPath: collectionPath,
+      userId: userId,
+      data: data,
+    );
+    switch (result) {
+      case Success<void>():
+        _getUserData();
+
+      case Failure<void>():
+        _uiStreamController.add(AppSectionLogoutEvent(result.errorMessage));
+    }
   }
 
   void _switchToHome() =>

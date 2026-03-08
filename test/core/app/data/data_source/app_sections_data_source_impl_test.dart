@@ -5,20 +5,29 @@ import 'package:flower_app/core/app/data/data_source/app_sections_data_source.da
 import 'package:flower_app/core/app/data/data_source/app_sections_data_source_impl.dart';
 import 'package:flower_app/core/app/data/models/response/get_current_user_data_response_dto.dart';
 import 'package:flower_app/core/error_handling/result.dart';
+import 'package:flower_app/core/services/firebase/firebase_store_service.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../../../features/auth/data/datasources/auth_ds_impl_test.mocks.dart';
+import 'app_sections_data_source_impl_test.mocks.dart';
 
+@GenerateMocks([FirebaseStoreService])
 void main() {
   late ApiClient mockApiClient;
+  late FirebaseStoreService mockFirebaseStoreService;
   late AppSectionsDataSource appSectionsDataSource;
   late UserDto userDto;
   late GetCurrentUserDataResponseDto response;
   late DioException dioException;
   setUp(() {
     mockApiClient = MockApiClient();
-    appSectionsDataSource = AppSectionsDataSourceImpl(mockApiClient);
+    mockFirebaseStoreService = MockFirebaseStoreService();
+    appSectionsDataSource = AppSectionsDataSourceImpl(
+      mockApiClient,
+      mockFirebaseStoreService,
+    );
     userDto = UserDto(
       id: '1',
       firstName: 'Mohamed',

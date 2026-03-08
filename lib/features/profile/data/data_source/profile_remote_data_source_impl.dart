@@ -4,6 +4,7 @@ import 'package:flower_app/core/api/api_client.dart';
 import 'package:flower_app/core/error_handling/execute_api.dart';
 import 'package:flower_app/core/error_handling/result.dart';
 import 'package:flower_app/features/profile/data/models/edit_profile_request.dart';
+import 'package:flower_app/features/profile/data/models/get_notifications_response_dto.dart';
 import 'package:flower_app/features/profile/data/models/get_user_data_response.dart';
 import 'package:injectable/injectable.dart';
 import 'package:flower_app/features/profile/data/models/upload_photo_response.dart';
@@ -34,4 +35,11 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   }) {
     return executeApi(() => _apiClient.uploadPhoto(photo));
   }
+
+  @override
+  Future<Result<List<NotificationItemDTO>>> getNotifications() async =>
+      executeApi(() async {
+        final response = await _apiClient.getNotifications();
+        return response.notificationsDto ?? [];
+      });
 }

@@ -18,7 +18,7 @@ class PushNotificationService {
   static final _messaging = FirebaseMessaging.instance;
   static final _localNotification = FlutterLocalNotificationsPlugin();
 
-  static Future<void> initFCM() async {
+  static Future<String?> initFCM() async {
     await _messaging.requestPermission();
     await _initLocalNotification();
     String? deviceToken = await _messaging.getToken();
@@ -30,6 +30,7 @@ class PushNotificationService {
         body: message.notification?.body,
       );
     });
+    return deviceToken;
   }
 
   static Future<void> _initLocalNotification() async {

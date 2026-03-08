@@ -25,4 +25,15 @@ class AppSectionsRepoImpl implements AppSectionsRepo {
         return Failure(result.errorMessage);
     }
   }
+
+  @override
+  Future<Result<void>> upLoadUserData({
+    required String collectionPath,
+    required String userId,
+    required Map<String, dynamic> data,
+  }) => _dataSource.upLoadUserData(
+    collectionPath: collectionPath,
+    userId: userId,
+    data: data,
+  );
 }

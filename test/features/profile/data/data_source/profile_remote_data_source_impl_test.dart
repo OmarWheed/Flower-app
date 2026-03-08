@@ -4,6 +4,7 @@ import 'package:flower_app/core/api/models/response/user_dto.dart';
 import 'package:flower_app/core/error_handling/result.dart';
 import 'package:flower_app/features/profile/data/data_source/profile_remote_data_source_impl.dart';
 import 'package:flower_app/features/profile/data/models/edit_profile_request.dart';
+import 'package:flower_app/features/profile/data/models/get_notifications_response_dto.dart';
 import 'package:flower_app/features/profile/data/models/get_user_data_response.dart';
 import 'package:flower_app/features/profile/data/models/upload_photo_response.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -190,6 +191,55 @@ void main() {
         expect(result, isA<Failure<UploadPhotoResponse>>());
         verify(mockApiClient.uploadPhoto(photo)).called(1);
         verifyNoMoreInteractions(mockApiClient);
+      },
+    );
+  });
+
+  group("Get Notifications Tests", () {
+    late GetNotificationsResponseDTO response;
+    late List<NotificationItemDTO> notifications;
+    setUp(() {
+      notifications = [
+        NotificationItemDTO(recipient: '1'),
+        NotificationItemDTO(recipient: '2'),
+        NotificationItemDTO(recipient: '3'),
+      ];
+      response = GetNotificationsResponseDTO(
+        message: "success",
+        notificationsDto: notifications,
+      );
+    });
+    test(
+      "Should return Success when getNotifications API call succeeds",
+      () async {
+        // Arrange
+        when(
+          mockApiClient.getNotifications(),
+        ).thenAnswer((_) async => response);
+        // Act
+        final result = await profileRemoteDataSourceImpl.getNotifications();
+
+        // Assert
+        verify(mockApiClient.getNotifications()).called(1);
+        verifyNoMoreInteractions(mockApiClient);
+        expect(
+          (result as Success<List<NotificationItemDTO>>).data,
+          equals(notifications),
+        );
+      },
+    );
+    test(
+      "Should return Failure when getNotifications API call throws exception",
+      () async {
+        // Arrange
+        when(mockApiClient.getNotifications()).thenThrow(dioException);
+        // Act
+        final result = await profileRemoteDataSourceImpl.getNotifications();
+
+        // Assert
+        verify(mockApiClient.getNotifications()).called(1);
+        verifyNoMoreInteractions(mockApiClient);
+        expect(result, isA<Failure<List<NotificationItemDTO>>>());
       },
     );
   });

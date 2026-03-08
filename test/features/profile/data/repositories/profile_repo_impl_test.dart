@@ -2,7 +2,9 @@ import 'dart:io';
 
 import 'package:flower_app/features/profile/data/data_source/profile_local_data_source_impl.dart';
 import 'package:flower_app/features/profile/data/models/about_us_dto.dart';
+import 'package:flower_app/features/profile/data/models/get_notifications_response_dto.dart';
 import 'package:flower_app/features/profile/domain/entity/about_us_entity.dart';
+import 'package:flower_app/features/profile/domain/entity/notification_entity.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -268,6 +270,7 @@ void main() {
       },
     );
   });
+
   group("Get About Us Test Cases", () {
     late AboutUsDto aboutUsDto;
     late Success<AboutUsDto> successDtoResponse;
@@ -314,6 +317,54 @@ void main() {
       expect(
         (result as Failure<AboutUsEntity>).errorMessage,
         "Local Data Error",
+      );
+    });
+  });
+
+  group("GetNotifications Test Cases", () {
+    late List<NotificationItemDTO> notifications;
+    late Success<List<NotificationItemDTO>> successResponse;
+    late Failure<List<NotificationItemDTO>> failureResponse;
+
+    setUp(() {
+      notifications = [NotificationItemDTO(), NotificationItemDTO()];
+      successResponse = Success<List<NotificationItemDTO>>(notifications);
+      failureResponse = Failure<List<NotificationItemDTO>>(
+        "Something went error",
+      );
+    });
+
+    test("when call getNotifications Success Case", () async {
+      // Act
+      provideDummy<Result<List<NotificationItemDTO>>>(successResponse);
+      when(
+        mockProfileDataSource.getNotifications(),
+      ).thenAnswer((_) async => successResponse);
+      final result = await profileRepoImpl.getNotifications();
+
+      // Assert
+      verify(mockProfileDataSource.getNotifications()).called(1);
+      verifyNoMoreInteractions(mockProfileDataSource);
+      expect(result, isA<Success<List<NotificationEntity>>>());
+      final successData = (result as Success<List<NotificationEntity>>).data;
+      expect(successData, isNotNull);
+    });
+
+    test("when call getNotifications Failer Case", () async {
+      // Act
+      provideDummy<Result<List<NotificationItemDTO>>>(successResponse);
+      when(
+        mockProfileDataSource.getNotifications(),
+      ).thenAnswer((_) async => failureResponse);
+      final result = await profileRepoImpl.getNotifications();
+
+      // Assert
+      verify(mockProfileDataSource.getNotifications()).called(1);
+      verifyNoMoreInteractions(mockProfileDataSource);
+      expect(result, isA<Failure<List<NotificationEntity>>>());
+      expect(
+        (result as Failure<List<NotificationEntity>>).errorMessage,
+        "Something went error",
       );
     });
   });

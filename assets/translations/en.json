@@ -24,6 +24,17 @@
   "account_created_success": "account_created_success",
   "continue": "Continue",
   "errors": {
+    "permissionDenied": "You don't have permission to perform this action.",
+    "serviceUnavailable": "The service is temporarily unavailable. Please try again later.",
+    "timeout": "The request timed out. Please try again.",
+    "notFound": "The requested resource was not found.",
+    "alreadyExists": "The resource already exists.",
+    "unauthenticated": "You are not authenticated. Please login first.",
+    "cancelled": "The operation was cancelled.",
+    "resourceExhausted": "Resource limit exceeded. Please try again later.",
+    "aborted": "The operation was aborted. Please retry.",
+    "internal": "An internal error occurred. Please try again.",
+
     "connectionTimeout": "Connection Timeout",
     "sendTimeout": "Send Timeout",
     "receiveTimeout": "Receive Timeout",
@@ -119,7 +130,7 @@
   "resendIn": "Resend in",
   "my_orders": "My Orders",
   "saved_address": "Saved Addresses",
-  "notification": "Notification",
+  "notification": "Notifications",
   "language": "Language",
   "about_us": "About Us",
   "terms_and_conditions": "Terms and Conditions",
@@ -189,5 +200,28 @@
   "newest_first" : "Newest first",
   "oldest_first" : "Oldest first",
   "discount_first": "Discount first",
-  "Arrive by 03 Sep 2024, 11:00 AM": "Arrive by 03 Sep 2024, 11:00 AM"
+  "Arrive by 03 Sep 2024, 11:00 AM": "Arrive by 03 Sep 2024, 11:00 AM",
+  "Product": "Product",
+  "Track Order": "Track Order",
+  "Reorder": "Reorder",
+  "track_order_number": "Order number {}",
+  "delivered_on": "Delivered on {}",
+  "Order number N/A": "Order number N/A",
+  "Delivered on N/A": "Delivered on N/A",
+  "My orders": "My orders",
+  "Active": "Active",
+  "No active orders": "No active orders",
+  "No completed orders": "No completed orders",
+  "Failed to load orders": "Failed to load orders",
+  "Retry": "Retry",
+  "Order": "Order",
+  "Completed": "Completed"
+
+
+
+
+
+
+
+
 }

@@ -20,6 +20,18 @@ sealed class AppSectionIntent {}
 
 class AppSectionInitIntent extends AppSectionIntent {}
 
+class UpLoadUserInfoIntent extends AppSectionIntent {
+  final String collectionPath;
+  final String userId;
+  final Map<String, dynamic> data;
+
+  UpLoadUserInfoIntent({
+    required this.collectionPath,
+    required this.userId,
+    required this.data,
+  });
+}
+
 class ViewHomeIntent extends AppSectionIntent {}
 
 class ViewCategoryIntent extends AppSectionIntent {

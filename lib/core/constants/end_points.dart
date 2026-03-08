@@ -25,4 +25,6 @@ class EndPoints {
   static const String updateAddress = "addresses/{id}";
   static const String deleteAddress = "addresses/{id}";
   static const String getLoggedUserAddress = "addresses";
+  static const String notifications = "notifications/user";
+  static const String orders = "orders";
 }

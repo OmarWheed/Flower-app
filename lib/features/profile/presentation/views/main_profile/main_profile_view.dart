@@ -53,7 +53,7 @@ class _MainProfileViewState extends State<MainProfileView>
               Navigator.pushNamed(context, AppRoutes.editProfile);
 
             case NavToMyOrdersEvent():
-              Navigator.pushNamed(context, AppRoutes.orders);
+              Navigator.pushNamed(context, AppRoutes.savedOrders);
 
             case NavToSavedAddressesEvent():
               Navigator.of(context).pushNamed(AppRoutes.saveAddress);
@@ -196,7 +196,6 @@ class _MainProfileViewState extends State<MainProfileView>
 
   Future<void> _loadVersion() async {
     final info = await PackageInfo.fromPlatform();
-    debugPrint("Version: ${info.version}");
     setState(() => _appVersion = info.version);
   }
 
