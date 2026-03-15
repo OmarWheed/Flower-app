@@ -36,6 +36,8 @@ import 'package:flower_app/features/saved_orders/presentation/view_model/saved_o
 import 'package:flower_app/features/terms/presentation/manager/terms_intent.dart';
 import 'package:flower_app/features/terms/presentation/terms_view.dart';
 import 'package:flower_app/features/terms/presentation/view_model/terms_view_model.dart';
+import 'package:flower_app/features/track_order/presentation/view/track_order_view.dart';
+import 'package:flower_app/features/track_order/presentation/view_model/track_order_view_model/track_order_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -65,6 +67,7 @@ class AppRoutes {
   static const String checkout = '/checkout';
   static const String payment = '/payment';
   static const String savedOrders = '/savedOrders';
+  static const String trackOrder = '/trackOrder';
 }
 
 Route? onGenerateRoute(RouteSettings settings) {
@@ -242,7 +245,6 @@ Route? onGenerateRoute(RouteSettings settings) {
           child: const SavedOrdersScreen(),
         ),
       );
-
     case AppRoutes.notifications:
       var viewModel = getIt.get<NotificationsViewModel>();
       return MaterialPageRoute(
@@ -252,6 +254,15 @@ Route? onGenerateRoute(RouteSettings settings) {
         ),
       );
 
+    case AppRoutes.trackOrder:
+      final orderId = settings.arguments as String;
+      var viewModel = getIt<TrackOrderViewModel>();
+      return MaterialPageRoute(
+        builder: (_) => BlocProvider(
+          create: (context) => viewModel,
+          child: TrackOrderView(orderId: orderId),
+        ),
+      );
     default:
       return null;
   }

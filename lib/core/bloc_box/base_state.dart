@@ -45,9 +45,9 @@ class BaseState<T> with EquatableMixin {
   bool get isError => requestState == RequestState.error;
 
   @override
-  List<Object> get props {
-    return [requestState, errorMessage ?? '', data ?? ''];
-  } // Something went wrong
+  List<Object?> get props {
+    return [requestState, errorMessage ?? '', data];
+  }
 }
 
 // ════════════════════════════════════════════

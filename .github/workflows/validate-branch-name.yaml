@@ -1,37 +1,15 @@
-name: Validate Branch Name
+- name: Validate branch name
+  run: |
+    echo "Validating branch: $BRANCH_NAME"
 
-on:
-  push:
-    branches-ignore:
-      - main
-      - development
-  pull_request:
+    # feature|fix|hotfix|task / ABC-18-description
+    PATTERN="^(feature|fix|hotfix|task)\/[A-Z]{3}-[0-9]+-[a-z0-9-]+$"
 
-jobs:
-  validate-branch-name-action:
-    runs-on: ubuntu-latest
+    if [[ ! "$BRANCH_NAME" =~ $PATTERN ]]; then
+      echo "❌ Invalid branch name!"
+      echo "Expected format:"
+      echo "feature|fix|hotfix|task/ABC-18-description"
+      exit 1
+    fi
 
-    steps:
-      - name: Get branch name
-        run: |
-          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-            BRANCH_NAME="${{ github.head_ref }}"
-          else
-            BRANCH_NAME="${GITHUB_REF#refs/heads/}"
-          fi
-          echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
-      - name: Validate branch name
-        run: |
-          echo "Validating branch: $BRANCH_NAME"
-
-          # feature|fix|hotfix|task / FA-18-description
-          PATTERN="^(feature|fix|hotfix|task)\/FA-[0-9]+-[a-z0-9-]+$"
-
-          if [[ ! "$BRANCH_NAME" =~ $PATTERN ]]; then
-            echo "❌ Invalid branch name!"
-            echo "Expected format:"
-            echo "feature|fix|hotfix|task/FA-18-description"
-            exit 1
-          fi
-
-          echo "✅ Branch name is valid"
+    echo "✅ Branch name is valid"

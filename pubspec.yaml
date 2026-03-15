@@ -67,6 +67,7 @@ dependencies:
 
   firebase_crashlytics: ^5.0.7
   cloud_firestore: ^6.1.2
+  geolocator: ^14.0.2
 
 
 dev_dependencies:

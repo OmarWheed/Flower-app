@@ -215,13 +215,15 @@
   "Failed to load orders": "Failed to load orders",
   "Retry": "Retry",
   "Order": "Order",
-  "Completed": "Completed"
-
-
-
-
-
-
-
-
+  "Completed": "Completed",
+  "looking_for_a_delivery_partner": "Looking for a delivery partner",
+  "Estimated arrival": "Estimated arrival",
+  "order_details": "Order details",
+  "track_order": "Track order",
+  "Show map": "Show map",
+  "show_map": "Show Map",
+  "estimated_arrival": "Estimated arrival",
+  "order_delivered": "Order Delivered",
+  "waiting_for_courier_to_accept_the_order": "Waiting for courier to accept the order",
+  "your_order_is_confirmed_and_we're_currently": "Your order is confirmed and we're currently\nsearching for a courier to pick it up."
 }
