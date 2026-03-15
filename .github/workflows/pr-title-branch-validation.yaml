@@ -24,13 +24,9 @@ jobs:
           set -e
           TITLE="${{ github.event.pull_request.title }}"
 
-          # Allowed types
           TYPES="fix|feat|hotfix|release|build|test"
+          TICKET="[A-Z]{2,10}-[0-9]{1,5}"
 
-          # Ticket pattern
-          TICKET="(ECOM|APP|POS|MOB|PROJ|[A-Z]{3,10}-[0-9]{1,5}|JIRA-[0-9]+|FA-[0-9]+)"
-
-          # Regex: type(TICKET): task name
           REGEX="^(${TYPES})\(${TICKET}\):[[:space:]]+[A-Za-z0-9].*$"
 
           if [[ ! "$TITLE" =~ $REGEX ]]; then
@@ -43,7 +39,7 @@ jobs:
             echo "  type(TICKET): task name"
             echo ""
             echo "Allowed types: $TYPES"
-            echo "Allowed tickets: ECOM-123, APP-45, JIRA-999, PROJ-8, FA-17"
+            echo "Allowed tickets: FA-17, FTA-26, APP-145, JIRA-918"
             echo ""
             echo "Valid examples:"
             echo "  feat(FA-17): Validate PR title action"
@@ -63,9 +59,8 @@ jobs:
         run: |
           BRANCH="${{ github.head_ref }}"
           TYPES="feature|fix|hotfix|release|build|test"
-          TICKET="(ECOM|APP|POS|MOB|PROJ|[A-Z]{3,10}-[0-9]{1,5}|JIRA-[0-9]+|FA-[0-9]+)"
+          TICKET="[A-Z]{2,10}-[0-9]{1,5}"
 
-          # Regex: feature/TICKET-task-name
           REGEX="^(${TYPES})/${TICKET}-[a-z0-9-]+$"
 
           if [[ ! "$BRANCH" =~ $REGEX ]]; then
@@ -76,7 +71,9 @@ jobs:
             echo "Expected format:"
             echo "  feature/TICKET-task-name"
             echo ""
-            echo "Valid example: feature/FA-17-validate-pr-title-action"
+            echo "Valid example:"
+            echo "  feature/FA-17-validate-pr-title-action"
+            echo "  feature/FTA-26-order-live-updates"
             exit 1
           fi
 
