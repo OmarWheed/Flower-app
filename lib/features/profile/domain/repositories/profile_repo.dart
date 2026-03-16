@@ -16,5 +16,7 @@ abstract interface class ProfileRepo {
 
   Future<Result<AboutUsEntity>> getAboutUs();
 
-  Future<Result<List<NotificationEntity>>> getNotifications();
+  Future<Result<List<NotificationEntity>>> getNotifications({
+    required String userId,
+  });
 }

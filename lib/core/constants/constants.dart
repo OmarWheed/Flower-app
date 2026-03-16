@@ -27,3 +27,13 @@ const Map<String, Map<String, String>> egyptGovernorates = {
   "26": {"en": "North Sinai", "ar": "شمال سيناء"},
   "27": {"en": "Suhag", "ar": "سوهاج"},
 };
+
+class AppConstants {
+  AppConstants._();
+
+  static const String fcmAccessToken = 'fcm_access_token';
+
+  static const String authorizationKey = "Authorization";
+  static const String scopeUrl =
+      "https://www.googleapis.com/auth/firebase.messaging";
+}

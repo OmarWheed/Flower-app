@@ -3,8 +3,10 @@ import 'dart:async';
 import 'package:flower_app/core/app/domain/use_case/get_user_data_use_case.dart';
 import 'package:flower_app/core/app/domain/use_case/upload_user_info_use_case.dart';
 import 'package:flower_app/core/error_handling/result.dart';
+import 'package:flower_app/core/helper/local_keys.dart';
 import 'package:flower_app/features/auth/domain/models/user_entity.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:injectable/injectable.dart';
 
 import 'app_section_contracts.dart';
@@ -13,6 +15,7 @@ import 'app_section_contracts.dart';
 class AppSectionViewModel extends Cubit<AppSectionState> {
   final GetUserDataUseCase _getUserDataUseCase;
   final UploadUserInfoUseCase _uploadUserInfoUseCase;
+  final FlutterSecureStorage _secureStorage;
 
   UserEntity _user = UserEntity();
 
@@ -22,8 +25,11 @@ class AppSectionViewModel extends Cubit<AppSectionState> {
 
   Stream<AppSectionUIEvents> get uiStream => _uiStreamController.stream;
 
-  AppSectionViewModel(this._getUserDataUseCase, this._uploadUserInfoUseCase)
-    : super(const AppSectionState());
+  AppSectionViewModel(
+    this._getUserDataUseCase,
+    this._uploadUserInfoUseCase,
+    this._secureStorage,
+  ) : super(const AppSectionState());
 
   void doIntent(AppSectionIntent intent) {
     switch (intent) {
@@ -87,6 +93,10 @@ class AppSectionViewModel extends Cubit<AppSectionState> {
     switch (result) {
       case Success<UserEntity>():
         _user = result.data;
+        _secureStorage.write(
+          key: LocalKeys.userId,
+          value: result.data.id ?? '',
+        );
       case Failure<UserEntity>():
         _uiStreamController.add(AppSectionLogoutEvent(result.errorMessage));
     }

@@ -5,25 +5,33 @@ import 'package:flower_app/core/app/presentation/view_model/app_section_contract
 import 'package:flower_app/core/app/presentation/view_model/app_section_view_model.dart';
 import 'package:flower_app/core/error_handling/result.dart';
 import 'package:flower_app/features/auth/domain/models/user_entity.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
 import 'app_section_view_model_test.mocks.dart';
 
-@GenerateMocks([GetUserDataUseCase, UploadUserInfoUseCase])
+@GenerateMocks([
+  GetUserDataUseCase,
+  UploadUserInfoUseCase,
+  FlutterSecureStorage,
+])
 void main() {
   late MockGetUserDataUseCase mockGetUserDataUseCase;
   late MockUploadUserInfoUseCase mockUploadUserInfoUseCase;
   late AppSectionViewModel viewModel;
+  late FlutterSecureStorage secureStorage;
 
   setUp(() {
     provideDummy<Result<UserEntity>>(Success(UserEntity()));
     mockGetUserDataUseCase = MockGetUserDataUseCase();
     mockUploadUserInfoUseCase = MockUploadUserInfoUseCase();
+    secureStorage = MockFlutterSecureStorage();
     viewModel = AppSectionViewModel(
       mockGetUserDataUseCase,
       mockUploadUserInfoUseCase,
+      secureStorage,
     );
   });
 

@@ -136,19 +136,22 @@ class _MainProfileViewState extends State<MainProfileView>
               buildWhen: (previous, current) =>
                   previous.allowNotification != current.allowNotification,
               builder: (context, state) {
-                bool activeSwitch = state.allowNotification ?? false;
                 return MainProfileItem(
                   title: 'notification'.tr(),
                   prefix: Switch(
+                    value: state.allowNotification ?? false,
                     inactiveTrackColor: context.appTheme.grey,
-                    value: activeSwitch,
                     onChanged: (newValue) {
-                      vm.doIntent(
+                      context.read<MainProfileViewModel>().doIntent(
                         OnNotificationClickIntent(allowNotification: newValue),
                       );
                     },
                   ),
-                  onTap: null, // Remove onTap - let Switch handle interaction
+                  onTap: () {
+                    context.read<MainProfileViewModel>().doIntent(
+                      NavigateToNotificationEvent(),
+                    );
+                  },
                 );
               },
             ),

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:flower_app/core/api/api_client.dart';
 import 'package:flower_app/core/api/models/response/user_dto.dart';
@@ -13,16 +14,35 @@ import 'package:mockito/mockito.dart';
 
 import 'profile_remote_data_source_impl_test.mocks.dart';
 
-@GenerateMocks([ApiClient])
+@GenerateMocks([
+  ApiClient,
+  FirebaseFirestore,
+  CollectionReference<Map<String, dynamic>>,
+  DocumentReference<Map<String, dynamic>>,
+  QuerySnapshot<Map<String, dynamic>>,
+  QueryDocumentSnapshot<Map<String, dynamic>>,
+])
 void main() {
   late MockApiClient mockApiClient;
+  late MockFirebaseFirestore mockFirebaseFirestore;
   late ProfileRemoteDataSourceImpl profileRemoteDataSourceImpl;
   late DioException dioException;
   late UserDto userDto;
+  late MockCollectionReference<Map<String, dynamic>> mockUsersCollection;
+  late MockCollectionReference<Map<String, dynamic>>
+  mockNotificationsCollection;
+  late MockDocumentReference<Map<String, dynamic>> mockUserDoc;
+  late MockQuerySnapshot<Map<String, dynamic>> mockQuerySnapshot;
+  late MockQueryDocumentSnapshot<Map<String, dynamic>> mockDoc1;
+  late MockQueryDocumentSnapshot<Map<String, dynamic>> mockDoc2;
 
   setUp(() {
     mockApiClient = MockApiClient();
-    profileRemoteDataSourceImpl = ProfileRemoteDataSourceImpl(mockApiClient);
+    mockFirebaseFirestore = MockFirebaseFirestore();
+    profileRemoteDataSourceImpl = ProfileRemoteDataSourceImpl(
+      mockApiClient,
+      mockFirebaseFirestore,
+    );
     dioException = DioException(
       requestOptions: RequestOptions(),
       type: DioExceptionType.connectionError,
@@ -35,6 +55,12 @@ void main() {
       phone: "+201000000000",
       photo: null,
     );
+    mockUsersCollection = MockCollectionReference();
+    mockNotificationsCollection = MockCollectionReference();
+    mockUserDoc = MockDocumentReference();
+    mockQuerySnapshot = MockQuerySnapshot();
+    mockDoc1 = MockQueryDocumentSnapshot();
+    mockDoc2 = MockQueryDocumentSnapshot();
   });
 
   group("Get Profile Data Tests", () {
@@ -196,49 +222,57 @@ void main() {
   });
 
   group("Get Notifications Tests", () {
-    late GetNotificationsResponseDTO response;
-    late List<NotificationItemDTO> notifications;
     setUp(() {
-      notifications = [
-        NotificationItemDTO(recipient: '1'),
-        NotificationItemDTO(recipient: '2'),
-        NotificationItemDTO(recipient: '3'),
-      ];
-      response = GetNotificationsResponseDTO(
-        message: "success",
-        notificationsDto: notifications,
-      );
+      when(
+        mockFirebaseFirestore.collection('users'),
+      ).thenReturn(mockUsersCollection);
+
+      when(mockUsersCollection.doc("1")).thenReturn(mockUserDoc);
+
+      when(
+        mockUserDoc.collection('notifications'),
+      ).thenReturn(mockNotificationsCollection);
+
+      when(
+        mockNotificationsCollection.get(),
+      ).thenAnswer((_) async => mockQuerySnapshot);
+
+      when(mockQuerySnapshot.docs).thenReturn([mockDoc1, mockDoc2]);
+
+      when(mockDoc1.data()).thenReturn({
+        "recipient": "1",
+        "title": "Test title",
+        "body": "Test body",
+      });
+      when(mockDoc2.data()).thenReturn({
+        "recipient": "2",
+        "title": "Test title 2",
+        "body": "Test body 2",
+      });
     });
     test(
-      "Should return Success when getNotifications API call succeeds",
+      "Should return Success when getNotifications from firebase call succeeds",
       () async {
-        // Arrange
-        when(
-          mockApiClient.getNotifications(),
-        ).thenAnswer((_) async => response);
-        // Act
-        final result = await profileRemoteDataSourceImpl.getNotifications();
-
-        // Assert
-        verify(mockApiClient.getNotifications()).called(1);
-        verifyNoMoreInteractions(mockApiClient);
-        expect(
-          (result as Success<List<NotificationItemDTO>>).data,
-          equals(notifications),
+        final result = await profileRemoteDataSourceImpl.getNotifications(
+          userId: "1",
         );
+        expect(result, isA<Success<List<NotificationItemDTO>>>());
+        final data = (result as Success<List<NotificationItemDTO>>).data;
+        verify(mockFirebaseFirestore.collection('users')).called(1);
+        expect(data.length, 2);
+        expect(data.first.title, "Test title");
+        expect(data.last.title, "Test title 2");
       },
     );
     test(
       "Should return Failure when getNotifications API call throws exception",
       () async {
         // Arrange
-        when(mockApiClient.getNotifications()).thenThrow(dioException);
-        // Act
-        final result = await profileRemoteDataSourceImpl.getNotifications();
+        when(mockFirebaseFirestore.collection('users')).thenThrow(dioException);
+        final result = await profileRemoteDataSourceImpl.getNotifications(
+          userId: "1",
+        );
 
-        // Assert
-        verify(mockApiClient.getNotifications()).called(1);
-        verifyNoMoreInteractions(mockApiClient);
         expect(result, isA<Failure<List<NotificationItemDTO>>>());
       },
     );

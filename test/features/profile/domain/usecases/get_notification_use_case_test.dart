@@ -24,13 +24,13 @@ void main() {
     () async {
       List<NotificationEntity> notifications = [];
       provideDummy<Result<List<NotificationEntity>>>(Success(notifications));
-      when(profileRepo.getNotifications()).thenAnswer(
+      when(profileRepo.getNotifications(userId: "1")).thenAnswer(
         (_) async => Success<List<NotificationEntity>>(notifications),
       );
 
-      await getNotificationUseCase.call();
+      await getNotificationUseCase.call(userId: "1");
 
-      verify(profileRepo.getNotifications()).called(1);
+      verify(profileRepo.getNotifications(userId: "1")).called(1);
       verifyNoMoreInteractions(profileRepo);
     },
   );

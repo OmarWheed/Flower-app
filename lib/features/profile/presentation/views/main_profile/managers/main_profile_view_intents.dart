@@ -6,6 +6,8 @@ class OnMyOrdersClickIntent extends ProfileViewIntents {}
 
 class OnSavedAddressesClickIntent extends ProfileViewIntents {}
 
+class NavigateToNotificationEvent extends ProfileViewIntents {}
+
 class OnNotificationClickIntent extends ProfileViewIntents {
   final bool? allowNotification;
 

@@ -1,21 +1,21 @@
 import 'dart:io';
 
+import 'package:flower_app/core/api/models/response/user_dto.dart';
+import 'package:flower_app/core/error_handling/result.dart';
+import 'package:flower_app/features/auth/domain/models/user_entity.dart';
 import 'package:flower_app/features/profile/data/data_source/profile_local_data_source_impl.dart';
+import 'package:flower_app/features/profile/data/data_source/profile_remote_data_source_impl.dart';
 import 'package:flower_app/features/profile/data/models/about_us_dto.dart';
+import 'package:flower_app/features/profile/data/models/edit_profile_request.dart';
 import 'package:flower_app/features/profile/data/models/get_notifications_response_dto.dart';
+import 'package:flower_app/features/profile/data/models/get_user_data_response.dart';
+import 'package:flower_app/features/profile/data/models/upload_photo_response.dart';
+import 'package:flower_app/features/profile/data/repositories/profile_repo_impl.dart';
 import 'package:flower_app/features/profile/domain/entity/about_us_entity.dart';
 import 'package:flower_app/features/profile/domain/entity/notification_entity.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:flower_app/core/api/models/response/user_dto.dart';
-import 'package:flower_app/core/error_handling/result.dart';
-import 'package:flower_app/features/auth/domain/models/user_entity.dart';
-import 'package:flower_app/features/profile/data/data_source/profile_remote_data_source_impl.dart';
-import 'package:flower_app/features/profile/data/models/edit_profile_request.dart';
-import 'package:flower_app/features/profile/data/models/get_user_data_response.dart';
-import 'package:flower_app/features/profile/data/models/upload_photo_response.dart';
-import 'package:flower_app/features/profile/data/repositories/profile_repo_impl.dart';
 
 import 'profile_repo_impl_test.mocks.dart';
 
@@ -338,12 +338,12 @@ void main() {
       // Act
       provideDummy<Result<List<NotificationItemDTO>>>(successResponse);
       when(
-        mockProfileDataSource.getNotifications(),
+        mockProfileDataSource.getNotifications(userId: "1"),
       ).thenAnswer((_) async => successResponse);
-      final result = await profileRepoImpl.getNotifications();
+      final result = await profileRepoImpl.getNotifications(userId: "1");
 
       // Assert
-      verify(mockProfileDataSource.getNotifications()).called(1);
+      verify(mockProfileDataSource.getNotifications(userId: "1")).called(1);
       verifyNoMoreInteractions(mockProfileDataSource);
       expect(result, isA<Success<List<NotificationEntity>>>());
       final successData = (result as Success<List<NotificationEntity>>).data;
@@ -354,12 +354,12 @@ void main() {
       // Act
       provideDummy<Result<List<NotificationItemDTO>>>(successResponse);
       when(
-        mockProfileDataSource.getNotifications(),
+        mockProfileDataSource.getNotifications(userId: "1"),
       ).thenAnswer((_) async => failureResponse);
-      final result = await profileRepoImpl.getNotifications();
+      final result = await profileRepoImpl.getNotifications(userId: "1");
 
       // Assert
-      verify(mockProfileDataSource.getNotifications()).called(1);
+      verify(mockProfileDataSource.getNotifications(userId: "1")).called(1);
       verifyNoMoreInteractions(mockProfileDataSource);
       expect(result, isA<Failure<List<NotificationEntity>>>());
       expect(

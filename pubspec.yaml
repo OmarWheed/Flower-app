@@ -67,6 +67,8 @@ dependencies:
 
   firebase_crashlytics: ^5.0.7
   cloud_firestore: ^6.1.2
+  googleapis_auth: ^2.0.0
+  http: ^1.6.0
   geolocator: ^14.0.2
 
 
@@ -99,6 +101,8 @@ flutter:
     - assets/address_json/
     - assets/fonts/
     - assets/json/
+   # - assets/flower_fcm_service.json
+
 
   fonts:
     - family: Inter

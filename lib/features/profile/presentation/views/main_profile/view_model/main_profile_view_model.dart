@@ -40,6 +40,9 @@ class MainProfileViewModel extends Cubit<MainProfileViewState> {
         _logout();
       case RefreshState():
         _refreshPermissionStatus();
+
+      case NavigateToNotificationEvent():
+        _navToNotifications();
     }
   }
 
@@ -48,6 +51,8 @@ class MainProfileViewModel extends Cubit<MainProfileViewState> {
   _navToMyOrders() => _uiControllerBroadcast.add(NavToMyOrdersEvent());
 
   _navToAddresses() => _uiControllerBroadcast.add(NavToSavedAddressesEvent());
+
+  _navToNotifications() => _uiControllerBroadcast.add(NavToNotificationEvent());
 
   _openLanguagesBottomSheet() =>
       _uiControllerBroadcast.add(OpenLanguageBottomSheetEvent());

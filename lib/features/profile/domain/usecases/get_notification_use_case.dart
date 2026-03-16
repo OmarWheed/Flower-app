@@ -9,6 +9,6 @@ class GetNotificationUseCase {
 
   GetNotificationUseCase(this._profileRepo);
 
-  Future<Result<List<NotificationEntity>>> call() =>
-      _profileRepo.getNotifications();
+  Future<Result<List<NotificationEntity>>> call({required String userId}) =>
+      _profileRepo.getNotifications(userId: userId);
 }

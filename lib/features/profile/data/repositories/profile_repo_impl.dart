@@ -93,8 +93,12 @@ class ProfileRepoImpl implements ProfileRepo {
   }
 
   @override
-  Future<Result<List<NotificationEntity>>> getNotifications() async {
-    final result = await _profileRemoteDataSource.getNotifications();
+  Future<Result<List<NotificationEntity>>> getNotifications({
+    required String userId,
+  }) async {
+    final result = await _profileRemoteDataSource.getNotifications(
+      userId: userId,
+    );
     switch (result) {
       case Success<List<NotificationItemDTO>>():
         var entities = result.data.map((e) => e.toEntity()).toList();

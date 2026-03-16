@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
+import 'package:flower_app/core/api/models/requests/send_notification_request.dart';
 import 'package:flower_app/core/app/data/models/product_response.dart';
 import 'package:flower_app/core/app/data/models/response/get_current_user_data_response_dto.dart';
+import 'package:flower_app/core/constants/constants.dart';
 import 'package:flower_app/core/error_handling/base_response_result_dto.dart';
 import 'package:flower_app/features/address/data/models/address_request_dto.dart';
 import 'package:flower_app/features/address/data/models/address_response_dto.dart';
@@ -161,4 +163,30 @@ abstract class ApiClient {
 
   @GET(EndPoints.notifications)
   Future<GetNotificationsResponseDTO> getNotifications();
+
+  /// Sends a push notification to a specific device using Firebase Cloud Messaging (FCM).
+  ///
+  /// [AccessToken] this Access Token can you Get it from [AppLocalStorage].
+  ///
+  /// i save AccessToken in [AppConstants.fcmAccessToken].
+  ///
+  /// i Use Store it In [Main].
+  ///
+  /// [Example Usage].
+  /// ```dart
+  /// api.sendNotification(
+  ///       notificationDto: SendNotificationRequest(
+  ///         targetToken: 'DeviceToken',
+  ///         title: 'Message Title',
+  ///         body: 'Message Body',
+  ///       ),
+  ///       authorization: 'Bearer $accessToken',
+  ///     );
+  /// ```
+  ///
+  @POST(EndPoints.callFirebaseServer)
+  Future<void> sendNotification({
+    @Body() required SendNotificationRequest notificationDto,
+    @Header(AppConstants.authorizationKey) required String authorization,
+  });
 }
