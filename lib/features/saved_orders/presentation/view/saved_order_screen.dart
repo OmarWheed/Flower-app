@@ -3,6 +3,7 @@ import 'package:flower_app/core/app_extension/app_extension.dart';
 import 'package:flower_app/core/bloc_box/base_state.dart';
 import 'package:flower_app/core/helper/app_routes.dart';
 import 'package:flower_app/features/saved_orders/domain/entity/saved_order_entity.dart';
+import 'package:flower_app/features/track_order/presentation/view/track_order_route_args.dart';
 import 'package:flower_app/features/saved_orders/presentation/view/widgets/custom_order_card.dart';
 import 'package:flower_app/features/saved_orders/presentation/view_model/saved_order_cubit.dart';
 import 'package:flower_app/features/saved_orders/presentation/view_model/saved_order_events.dart';
@@ -174,13 +175,25 @@ class _SavedOrdersScreenState extends State<SavedOrdersScreen>
           isActive: isActive,
           onReorder: () {
             if (isActive) {
+              final order = orderItemsList[index].order;
+              final addr = order.shippingAddress;
+              final latStr = addr?.lat;
+              final lngStr = addr?.long;
+              final destLat = (latStr != null && latStr.isNotEmpty)
+                  ? double.tryParse(latStr)
+                  : null;
+              final destLng = (lngStr != null && lngStr.isNotEmpty)
+                  ? double.tryParse(lngStr)
+                  : null;
               Navigator.pushNamed(
                 context,
                 AppRoutes.trackOrder,
-                arguments: orderItemsList[index].order.id,
+                arguments: TrackOrderRouteArgs(
+                  orderId: order.id ?? '',
+                  destLat: destLat,
+                  destLng: destLng,
+                ),
               );
-              //  Track Order
-              //  Navigation to Track Order
             } else {
               //  Reorder
               // Navigation to Reorder

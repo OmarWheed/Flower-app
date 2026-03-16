@@ -31,10 +31,19 @@ class TrackOrderViewModel extends Cubit<TrackOrderStates> {
         emit(state.copyWith(showMap: false));
       case OrderDeliveredIntent():
         _onOrderDelivered();
+      case SetDestinationOverrideIntent():
+        emit(state.copyWith(
+          destLatOverride: intent.destLat,
+          destLngOverride: intent.destLng,
+        ));
     }
   }
 
-  void _onOrderDelivered() {
+  Future<void> _onOrderDelivered() async {
+    final order = state.orderState.data;
+    if (order != null) {
+      await trackOrderRepo.sendOrderDeliveredNotification(order);
+    }
     _cancelSubscription();
     _uiEventsController.add(NavigatePopScreen());
   }

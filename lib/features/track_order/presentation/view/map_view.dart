@@ -91,15 +91,18 @@ class _MapsViewState extends State<MapsView> {
   }
 
   void _fitBoundsFromOrder(BuildContext context) {
-    final order = context.read<TrackOrderViewModel>().state.orderState.data;
+    final vm = context.read<TrackOrderViewModel>();
+    final order = vm.state.orderState.data;
     if (order == null) return;
+    final destLat = order.destLatDouble ?? vm.state.destLatOverride;
+    final destLng = order.destLngDouble ?? vm.state.destLngOverride;
+    final hasDest = (destLat != null && destLng != null);
 
     final points = <LatLng>[
       if (order.hasStorePosition)
         LatLng(order.storeLatDouble!, order.storeLngDouble!),
       if (order.hasDriverPosition) LatLng(order.latDouble!, order.longDouble!),
-      if (order.hasDestPosition)
-        LatLng(order.destLatDouble!, order.destLngDouble!),
+      if (hasDest) LatLng(destLat!, destLng!),
     ];
 
     if (points.isEmpty) return;
@@ -133,15 +136,20 @@ class _MapsViewState extends State<MapsView> {
     );
   }
 
-  LatLng _computeInitialCenter(ActiveOrderEntity order) {
+  LatLng _computeInitialCenter(
+    ActiveOrderEntity order, {
+    double? destLat,
+    double? destLng,
+  }) {
     if (order.hasDriverPosition) {
       return LatLng(order.latDouble!, order.longDouble!);
     }
     if (order.hasStorePosition) {
       return LatLng(order.storeLatDouble!, order.storeLngDouble!);
     }
-    if (order.hasDestPosition) {
-      return LatLng(order.destLatDouble!, order.destLngDouble!);
+    final hasDest = (destLat != null && destLng != null);
+    if (hasDest) {
+      return LatLng(destLat, destLng);
     }
     return _fallbackCenter;
   }
@@ -173,12 +181,16 @@ class _MapsViewState extends State<MapsView> {
           );
         }
         _loadOvalMarkersIfNeeded(context);
+        final destLat = order.destLatDouble ?? state.destLatOverride;
+        final destLng = order.destLngDouble ?? state.destLngOverride;
         return _MapContent(
           order: order,
+          destLatOverride: destLat,
+          destLngOverride: destLng,
           driverMarkerIcon: _driverMarkerIcon,
           storeMarkerIcon: _storeMarkerIcon,
           destMarkerIcon: _destMarkerIcon,
-          initialCenter: _computeInitialCenter(order),
+          initialCenter: _computeInitialCenter(order, destLat: destLat, destLng: destLng),
           onMapCreated: _onMapCreated,
         );
       },
@@ -187,10 +199,12 @@ class _MapsViewState extends State<MapsView> {
 }
 
 // ─────────────────────────────────────────────────────────────
-// Map Content
+// Map Content — uses order dest or override (e.g. from order's shipping address).
 // ─────────────────────────────────────────────────────────────
 class _MapContent extends StatelessWidget {
   final ActiveOrderEntity order;
+  final double? destLatOverride;
+  final double? destLngOverride;
   final BitmapDescriptor? driverMarkerIcon;
   final BitmapDescriptor? storeMarkerIcon;
   final BitmapDescriptor? destMarkerIcon;
@@ -199,12 +213,21 @@ class _MapContent extends StatelessWidget {
 
   const _MapContent({
     required this.order,
+    this.destLatOverride,
+    this.destLngOverride,
     required this.driverMarkerIcon,
     this.storeMarkerIcon,
     this.destMarkerIcon,
     required this.initialCenter,
     required this.onMapCreated,
   });
+
+  bool get _hasEffectiveDest =>
+      (order.destLatDouble != null && order.destLngDouble != null) ||
+      (destLatOverride != null && destLngOverride != null);
+
+  double? get _effectiveDestLat => order.destLatDouble ?? destLatOverride;
+  double? get _effectiveDestLng => order.destLngDouble ?? destLngOverride;
 
   Set<Marker> _buildMarkers() {
     final storeIcon =
@@ -233,10 +256,10 @@ class _MapContent extends StatelessWidget {
           position: LatLng(order.latDouble!, order.longDouble!),
           icon: driverIcon,
         ),
-      if (order.hasDestPosition)
+      if (_hasEffectiveDest && _effectiveDestLat != null && _effectiveDestLng != null)
         Marker(
           markerId: const MarkerId('destination'),
-          position: LatLng(order.destLatDouble!, order.destLngDouble!),
+          position: LatLng(_effectiveDestLat!, _effectiveDestLng!),
           icon: destIcon,
           infoWindow: const InfoWindow(title: 'Apartment'),
         ),
@@ -248,8 +271,8 @@ class _MapContent extends StatelessWidget {
       if (order.hasStorePosition)
         LatLng(order.storeLatDouble!, order.storeLngDouble!),
       if (order.hasDriverPosition) LatLng(order.latDouble!, order.longDouble!),
-      if (order.hasDestPosition)
-        LatLng(order.destLatDouble!, order.destLngDouble!),
+      if (_hasEffectiveDest && _effectiveDestLat != null && _effectiveDestLng != null)
+        LatLng(_effectiveDestLat!, _effectiveDestLng!),
     ];
     if (points.length < 2) return {};
     return {

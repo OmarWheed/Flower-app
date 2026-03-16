@@ -36,7 +36,9 @@ import 'package:flower_app/features/saved_orders/presentation/view_model/saved_o
 import 'package:flower_app/features/terms/presentation/manager/terms_intent.dart';
 import 'package:flower_app/features/terms/presentation/terms_view.dart';
 import 'package:flower_app/features/terms/presentation/view_model/terms_view_model.dart';
+import 'package:flower_app/features/track_order/presentation/view/track_order_route_args.dart';
 import 'package:flower_app/features/track_order/presentation/view/track_order_view.dart';
+import 'package:flower_app/features/track_order/presentation/view_model/track_order_view_model/track_order_events.dart';
 import 'package:flower_app/features/track_order/presentation/view_model/track_order_view_model/track_order_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -255,12 +257,18 @@ Route? onGenerateRoute(RouteSettings settings) {
       );
 
     case AppRoutes.trackOrder:
-      final orderId = settings.arguments as String;
+      final args = TrackOrderRouteArgs.fromDynamic(settings.arguments);
       var viewModel = getIt<TrackOrderViewModel>();
+      if (args.destLat != null && args.destLng != null) {
+        viewModel.doIntent(SetDestinationOverrideIntent(
+          destLat: args.destLat,
+          destLng: args.destLng,
+        ));
+      }
       return MaterialPageRoute(
         builder: (_) => BlocProvider(
           create: (context) => viewModel,
-          child: TrackOrderView(orderId: orderId),
+          child: TrackOrderView(orderId: args.orderId),
         ),
       );
     default:

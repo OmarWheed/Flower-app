@@ -3,4 +3,7 @@ import 'package:flower_app/features/track_order/domain/entity/active_order_entit
 
 abstract interface class TrackOrderRepo {
   Stream<Result<ActiveOrderEntity>> listenToOrder({required String orderId});
+
+  /// Sends FCM notification (e.g. to driver) when user confirms "Order Delivered".
+  Future<Result<void>> sendOrderDeliveredNotification(ActiveOrderEntity order);
 }
