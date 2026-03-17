@@ -3,4 +3,6 @@ import 'package:flower_app/features/track_order/domain/entity/active_order_entit
 
 abstract interface class TrackOrderRepo {
   Stream<Result<ActiveOrderEntity>> listenToOrder({required String orderId});
+
+  Future<void> sendOrderDeliveredNotification(ActiveOrderEntity order);
 }

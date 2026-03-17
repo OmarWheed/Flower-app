@@ -30,11 +30,18 @@ class TrackOrderViewModel extends Cubit<TrackOrderStates> {
       case ShowOrderDetailsIntent():
         emit(state.copyWith(showMap: false));
       case OrderDeliveredIntent():
-        _onOrderDelivered();
+        _onOrderDelivered(intent.order);
     }
   }
 
-  void _onOrderDelivered() {
+  Future<void> _onOrderDelivered(ActiveOrderEntity order) async {
+    if (order.driverToken.isNotEmpty) {
+      try {
+        await trackOrderRepo.sendOrderDeliveredNotification(order);
+      } catch (_) {
+        // Fire-and-forget: still pop even if notification fails
+      }
+    }
     _cancelSubscription();
     _uiEventsController.add(NavigatePopScreen());
   }

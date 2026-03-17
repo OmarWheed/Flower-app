@@ -7,4 +7,5 @@ class AssetsManager {
   static const String mapImage = "assets/image/map_image.png";
   static const String aboutUsFilePath = 'assets/json/about_us.json';
   static const String icCarSvg = 'assets/image/ic_car.svg';
+  static const String serviceAccountPath = "assets/flower_fcm_service.json";
 }

@@ -2,9 +2,11 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flower_app/core/bloc_box/my_bloc_observer.dart';
+import 'package:flower_app/core/constants/constants.dart';
 import 'package:flower_app/core/di/di.dart';
 import 'package:flower_app/core/helper/app_local_storage.dart';
 import 'package:flower_app/core/helper/local_keys.dart';
+import 'package:flower_app/core/services/firebase/fcm_service.dart';
 import 'package:flower_app/core/services/firebase/push_notification_service.dart';
 import 'package:flower_app/flower_app.dart';
 import 'package:flutter/foundation.dart';
@@ -23,6 +25,12 @@ void main() async {
 
   await PushNotificationService.initFCM().then((deviceToken) {
     AppLocalStorage.setData(LocalKeys.deviceToken, deviceToken);
+  });
+  await FCMService.getAccessToken().then((fcmAccessToken) {
+    AppLocalStorage.setSecuredString(
+      key: AppConstants.fcmAccessToken,
+      value: fcmAccessToken,
+    );
   });
 
   await Permission.notification.request().then((allow) {

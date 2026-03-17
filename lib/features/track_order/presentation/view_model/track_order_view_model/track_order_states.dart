@@ -13,6 +13,7 @@ class TrackOrderStates extends Equatable {
 
   TrackOrderStates copyWith({
     BaseState<ActiveOrderEntity>? orderState,
+    BaseState<void>? sendOrderDeliveredState,
     bool? showMap,
   }) {
     return TrackOrderStates(

@@ -27,4 +27,6 @@ class EndPoints {
   static const String getLoggedUserAddress = "addresses";
   static const String notifications = "notifications/user";
   static const String orders = "orders";
+  static const String callFirebaseServer =
+      'https://fcm.googleapis.com/v1/projects/flower-app-8de14/messages:send';
 }
