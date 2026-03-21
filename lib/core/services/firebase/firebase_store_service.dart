@@ -19,6 +19,12 @@ class DatabaseServiceImpl extends FirebaseStoreService {
     required String userId,
     required Map<String, dynamic> data,
   }) async {
-    await dbFirestore.collection(collectionPath).doc(userId).update(data);
+    final doc = await dbFirestore.collection(collectionPath).doc(userId).get();
+
+    if (doc.exists) {
+      await dbFirestore.collection(collectionPath).doc(userId).update(data);
+    } else {
+      await dbFirestore.collection(collectionPath).doc(userId).set(data);
+    }
   }
 }
