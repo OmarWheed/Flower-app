@@ -26,5 +26,6 @@ class DatabaseServiceImpl extends FirebaseStoreService {
     } else {
       await dbFirestore.collection(collectionPath).doc(userId).set(data);
     }
+
   }
 }
