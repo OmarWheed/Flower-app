@@ -14,10 +14,6 @@ class CartAppBar extends StatelessWidget {
     return SliverAppBar(
       titleSpacing: -14,
       backgroundColor: theme.backgroundColor,
-      leading: IconButton(
-        onPressed: () {},
-        icon: const Icon(Icons.arrow_back_ios_new_rounded),
-      ),
       scrolledUnderElevation: 0,
       pinned: true,
       title: BlocBuilder<OrderViewModel, OrderState>(
