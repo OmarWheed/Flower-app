@@ -20,6 +20,10 @@ bool isLoggedInUser = false;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await PushNotificationService.initFCM();
+  await Permission.notification.request().then((allow) {
+    AppLocalStorage.setData(LocalKeys.notification, allow.isGranted);
+  });
   await EasyLocalization.ensureInitialized();
   await configureDependencies();
 
