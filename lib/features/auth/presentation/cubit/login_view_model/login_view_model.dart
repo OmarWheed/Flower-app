@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flower_app/core/error_handling/result.dart';
 import 'package:flower_app/core/helper/app_local_storage.dart';
@@ -11,6 +12,8 @@ import 'package:flower_app/features/auth/domain/use_cases/login_use_case.dart';
 import 'package:flower_app/features/auth/presentation/cubit/login_view_model/login_events.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
+
+import '../../../../../core/di/di.dart';
 
 part 'login_state.dart';
 
@@ -43,6 +46,8 @@ class LoginViewModel extends Cubit<LoginState> {
     var response = await _loginUseCase.login(loginRequest: request);
     switch (response) {
       case Success<LoginResponseDto>():
+
+
         await AppLocalStorage.setSecuredString(
           key: LocalKeys.authToken,
           value: response.data.token ?? '',
@@ -54,6 +59,11 @@ class LoginViewModel extends Cubit<LoginState> {
             jsonEncode(user.toJson()),
           );
         }
+
+        getIt<Dio>().options.headers = {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${response.data.token}',
+        };
 
         emit(state.copyWith(successMessage: response.data.message));
         _uiEventsController.add(NavigateToHome());
